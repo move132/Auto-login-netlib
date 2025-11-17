@@ -169,7 +169,7 @@ async function main() {
   results.forEach(result => {
     summaryMessage += `${result.message}\n`;
   });
-  awati sendBarkNotification(
+  await sendBarkNotification(
     'Netlib.re通知',
     summaryMessage,
     {
