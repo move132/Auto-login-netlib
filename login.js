@@ -49,17 +49,6 @@ async function sendBarkNotification(title, body, options = {}) {
   }
 }
 
-// 使用示例
-// sendBarkNotification(
-//   'Hello Bark!',
-//   '这是一个测试推送通知。',
-//   {
-//     url: 'https://www.example.com',
-//     group: '测试组',
-//     sound: 'default',
-//     icon: 'https://example.com/icon.png'
-//   }
-// );
 async function sendTelegram(message) {
   if (!token || !chatId) return;
 
