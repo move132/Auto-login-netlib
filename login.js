@@ -4,6 +4,7 @@ const { chromium } = require('playwright');
 const token = process.env.BOT_TOKEN;
 const chatId = process.env.CHAT_ID;
 const accounts = process.env.ACCOUNTS;
+const endpoint = process.env.ENDPOINT;
 
 if (!accounts) {
   console.log('❌ 未配置账号');
@@ -21,6 +22,44 @@ if (accountList.length === 0) {
   process.exit(1);
 }
 
+// 发送通知的函数
+async function sendBarkNotification(title, body, options = {}) {
+  const payload = {
+    title: title,
+    body: body,
+    ...options  // 合并可选参数，如 { url: 'https://example.com', sound: 'alarm' }
+  };
+
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (response.ok) {
+      console.log('通知发送成功！');
+    } else {
+      console.error('发送失败：', response.statusText);
+    }
+  } catch (error) {
+    console.error('请求错误：', error);
+  }
+}
+
+// 使用示例
+// sendBarkNotification(
+//   'Hello Bark!',
+//   '这是一个测试推送通知。',
+//   {
+//     url: 'https://www.example.com',
+//     group: '测试组',
+//     sound: 'default',
+//     icon: 'https://example.com/icon.png'
+//   }
+// );
 async function sendTelegram(message) {
   if (!token || !chatId) return;
 
@@ -130,7 +169,13 @@ async function main() {
   results.forEach(result => {
     summaryMessage += `${result.message}\n`;
   });
-  
+  awati sendBarkNotification(
+    'Netlib.re通知',
+    summaryMessage,
+    {
+      group: 'Netlib'
+    }
+  );
   await sendTelegram(summaryMessage);
   
   console.log('\n✅ 所有账号处理完成！');
